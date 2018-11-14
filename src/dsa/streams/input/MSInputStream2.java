@@ -33,7 +33,9 @@ public class MSInputStream2 implements MSInputStream {
 	@Override
 	public boolean end_of_stream() throws IOException {
 		
-		if( dis.available() > 0 ) {
+		int bytesAvailable = dis.available();
+		
+		if( bytesAvailable > 0 ) {
 			return false;
 		}
 		

@@ -16,7 +16,7 @@ public class MSOutputStream4 implements MSOutputStream {
 	}
 
 	@Override
-	public void write(int element) {
+	public void write(Integer element) {
 		// TODO Auto-generated method stub
 		
 	}

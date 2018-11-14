@@ -17,6 +17,9 @@ import dsa.streams.input.MSInputStream2;
 import dsa.streams.input.MSInputStream3;
 import dsa.streams.input.MSInputStream4;
 import dsa.streams.output.MSOutputStream1;
+import dsa.streams.output.MSOutputStream2;
+import dsa.streams.output.MSOutputStream3;
+import dsa.streams.output.MSOutputStream4;
 
 
 public class Streams {
@@ -24,12 +27,12 @@ public class Streams {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		 
-		int streamType = 2;
+		int streamType = 3;
 		
 		try {		
 			
 			//createRandomFile( streamType );
-			
+			createFile( streamType );
 			readRandomFile( streamType );
 			
 		} catch (FileNotFoundException e) {
@@ -63,6 +66,27 @@ public class Streams {
 		
 	}
 	
+	public static MSOutputStream getOutputStream( int streamType ) {
+		
+		switch( streamType ) {
+			case 1:
+				return new MSOutputStream1();
+			
+			case 2:
+				return new MSOutputStream2();
+				
+			case 3:
+				return new MSOutputStream3();
+			
+			case 4:
+				return new MSOutputStream4();
+				
+			default:
+				return new MSOutputStream1();
+		}	
+		
+	}
+	
 	public static void readRandomFile( int streamType ) throws IOException {
 		
 		MSInputStream is = getInputStream( streamType );
@@ -81,16 +105,36 @@ public class Streams {
 		
 	}
 	
+	public static void createFile( int streamType ) throws IOException {
+		
+		MSOutputStream os = getOutputStream(streamType);
+		
+		os.create( "Random.data" );
+		
+		int numbers[] = { 2, 10, 5, 7, 1, 9, 2, 3, Integer.MAX_VALUE, 4, 6, 8 };
+		
+		for( int i = 0; i < numbers.length; i++) {
+			
+			os.write( numbers[i] );
+			
+		}
+		
+		os.close();
+		
+	}
+	
 	
 	public static void createRandomFile( int streamType ) throws IOException {
 		
-		MSOutputStream os = new MSOutputStream1();
+		MSOutputStream os = getOutputStream(streamType);
 		
 		os.create( "Random.data" );
 		
 		for( int i = 0; i < 10; i++) {
 			
 			int randomNum = ThreadLocalRandom.current().nextInt(0, 10);//Integer.MAX_VALUE);
+			
+			System.out.println( randomNum );
 			
 			os.write( randomNum );
 			

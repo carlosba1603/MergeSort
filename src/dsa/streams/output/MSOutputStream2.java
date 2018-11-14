@@ -24,9 +24,8 @@ public class MSOutputStream2 implements MSOutputStream {
 	}
 
 	@Override
-	public void write(int element) {
-		// TODO Auto-generated method stub
-		
+	public void write(Integer element) throws IOException {
+		dos.writeInt( element );
 	}
 
 	@Override

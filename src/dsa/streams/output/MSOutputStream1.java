@@ -18,7 +18,7 @@ public class MSOutputStream1 implements MSOutputStream{
 	}
 
 	@Override
-	public void write(int element) throws IOException {
+	public void write( Integer element) throws IOException {
 
 		dos.writeInt( element );
 	}
