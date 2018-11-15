@@ -64,6 +64,11 @@ public class DWayMerge {
 				if( !s.end_of_stream() ) {
 					buffer.add( new HeapNode( s.read_next(), i ) );
 					streamsDone.add(new Boolean(false) );
+				} else {
+					HeapNode n =  new HeapNode(Integer.MAX_VALUE, i);
+					n.valid = false;
+					buffer.add( n );
+					streamsDone.add(new Boolean( true ) );
 				}
 				
 			} catch (IOException e) {
@@ -93,6 +98,8 @@ public class DWayMerge {
 	    		
 	    		try {
 					mergedStream.write( root.element );
+
+				    System.out.println( root.element );
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -108,7 +115,7 @@ public class DWayMerge {
 					} else {
 						root.element = Integer.MAX_VALUE ;
 						root.valid = false;
-						streamsDone.set(i, true);
+						streamsDone.set(i, new Boolean(true));
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -118,7 +125,7 @@ public class DWayMerge {
 	    	
 	    	queue.heapify(0);
 	    	
-	    	if( i+1 == streams.size() && !getStreamsDone( streamsDone ) ) {
+	    	if( !getStreamsDone( streamsDone ) && i+1 == streams.size() ) {
 	    		i=-1;
 	    	}
 	    } 
