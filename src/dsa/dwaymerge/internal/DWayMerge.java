@@ -36,6 +36,8 @@ public class DWayMerge {
 			streams.add(is);
 		}
 		
+		
+		//System.out.println( "\n === Merged.data === \n" );
 		mergeStreams( streams );
 		
 		
@@ -52,33 +54,11 @@ public class DWayMerge {
 	
 	public static void mergeStreams( List< MSInputStream > streams ) {
 		
-		List<HeapNode> buffer = new ArrayList<>();
+
 		List<Boolean> streamsDone = new ArrayList<>();
 		
-	    for ( int i = 0; i < streams.size(); i++ ) {
-	    	
-	    	MSInputStream s = streams.get(i);
-	    	
-	    	try {
-	    		
-				if( !s.end_of_stream() ) {
-					buffer.add( new HeapNode( s.read_next(), i ) );
-					streamsDone.add(new Boolean(false) );
-				} else {
-					HeapNode n =  new HeapNode(Integer.MAX_VALUE, i);
-					n.valid = false;
-					buffer.add( n );
-					streamsDone.add(new Boolean( true ) );
-				}
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-	    } 
-		
-	    MSPriorityQueue queue = new MSPriorityQueue( buffer.toArray( new HeapNode[0] ) );
+		HeapNode[] heapNodes = getHeapNodeFromStream( streams, streamsDone  );
+	    MSPriorityQueue queue = new MSPriorityQueue( heapNodes );
 	    
 	    
 	    MSOutputStream mergedStream = StreamUtil.getOutputStream( StreamUtil.STREAM_TYPE );
@@ -94,12 +74,12 @@ public class DWayMerge {
 	    
 	    	HeapNode root = queue.getRoot(); 
 	    	
-	    	if( root.valid ) {
+	    	if( !streamsDone.get(i) ) {
 	    		
 	    		try {
 					mergedStream.write( root.element );
 
-				    System.out.println( root.element );
+				    //System.out.println( root.element );
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -114,7 +94,6 @@ public class DWayMerge {
 					    
 					} else {
 						root.element = Integer.MAX_VALUE ;
-						root.valid = false;
 						streamsDone.set(i, new Boolean(true));
 					}
 				} catch (IOException e) {
@@ -129,6 +108,36 @@ public class DWayMerge {
 	    		i=-1;
 	    	}
 	    } 
+	}
+	
+	public static HeapNode[] getHeapNodeFromStream( List< MSInputStream > streams, List<Boolean> streamsDone ) {
+		
+		List<HeapNode> buffer = new ArrayList<>();
+		
+		for ( int i = 0; i < streams.size(); i++ ) {
+		    	
+		    	MSInputStream s = streams.get(i);
+		    	
+		    	try {
+		    		
+					if( !s.end_of_stream() ) {
+						buffer.add( new HeapNode( s.read_next(), i ) );
+						streamsDone.add(new Boolean(false) );
+					} else {
+						
+						buffer.add( new HeapNode(Integer.MAX_VALUE, i) );
+						streamsDone.add(new Boolean( true ) );
+					}
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} 
+		
+		return buffer.toArray( new HeapNode[0] );
+		 
 	}
 	
 	public static boolean getStreamsDone( List<Boolean> list ) {

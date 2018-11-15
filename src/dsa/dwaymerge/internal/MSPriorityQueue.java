@@ -20,6 +20,7 @@ public class MSPriorityQueue {
 	        parent--; 
 	        
 	    } 
+	    
 	} 
 	
     public HeapNode getRoot() {
