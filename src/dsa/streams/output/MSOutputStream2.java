@@ -17,7 +17,7 @@ public class MSOutputStream2 implements MSOutputStream {
 	@Override
 	public void create(String path) throws FileNotFoundException {
 
-		OutputStream os = new FileOutputStream( new File( path ), true );
+		OutputStream os = new FileOutputStream( new File( path ) );
 		BufferedOutputStream bos = new BufferedOutputStream( os );
 		this.dos = new DataOutputStream( bos );
 		
