@@ -7,7 +7,6 @@ public class MSInputStream4 implements MSInputStream {
 	@Override
 	public void open(String path) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

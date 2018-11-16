@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public interface MSOutputStream {
 	
-	public static final int B = 1024 * 4;
+	public static final int B = 5;
 
 	public void create( String path ) throws FileNotFoundException ;
 	
