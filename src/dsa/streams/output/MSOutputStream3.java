@@ -4,20 +4,23 @@ import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import dsa.streams.interfaces.MSOutputStream;
 
 public class MSOutputStream3 implements MSOutputStream {
 	
 	private DataOutputStream dos;
-	private byte buffer[];
+	private int buffer[];
 	private int count;
 	
 	@Override
 	public void create(String path) throws FileNotFoundException {
 
 		this.dos = new DataOutputStream( new FileOutputStream( path ) );
-		this.buffer = new byte[B];
+		this.buffer = new int[B];
 		this.count = 0;
 		
 	}
@@ -25,26 +28,45 @@ public class MSOutputStream3 implements MSOutputStream {
 	@Override
 	public void write(Integer element) throws IOException {
 		
-		buffer[count++] = (byte) ((element & 0xFF000000) >> 24);
-		buffer[count++] = (byte) ((element & 0x00FF0000) >> 16);
-		buffer[count++] = (byte) ((element & 0x0000FF00) >> 8);
-		buffer[count++] = (byte) ((element & 0x000000FF) >> 0);
-		
-		if( count > B ) {
-			dos.write( buffer );
-			buffer = new byte[B];
+		if( count == B ) {
+			
+			writeBufferInStream();
+			
+			buffer = new int[B];
 			count = 0;
 		}
+		
+		buffer[count++] = element;
+		
 		
 	}
 
 	@Override
 	public void close() throws IOException {
 		// TODO Auto-generated method stub
-		dos.write(buffer, 0, count);
+		
+		writeBufferInStream();
+		
 		this.count = 0;
 		this.dos.close();
 	}
 
+	private void writeBufferInStream() throws IOException {
+		
+		ByteBuffer byteBuffer = ByteBuffer.allocate( count * 4 );        
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        intBuffer.put( Arrays.copyOfRange(buffer, 0, count) );
+
+        byte[] array = byteBuffer.array();
+
+		dos.write( array );
+		
+	}
+	
+	/*private void writeBufferInStream() throws IOException {
+		
+		
+		
+	}*/
 
 }

@@ -37,17 +37,13 @@ public class DWayMerge {
 		}
 		
 		
-		//System.out.println( "\n === Merged.data === \n" );
+		System.out.println( "\n ===  Screen.data === \n" );
 		mergeStreams( streams );
 		
 		
-		try {
 			System.out.println( "\n === Merged.data === \n" );
-			StreamUtil.readFile("Merged.data", StreamUtil.STREAM_TYPE);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			StreamUtil.readFile("Merged.data");
+		
 
 	}
 	
@@ -79,7 +75,7 @@ public class DWayMerge {
 	    		try {
 					mergedStream.write( root.element );
 
-				    //System.out.println( root.element );
+				    System.out.println( root.element );
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
