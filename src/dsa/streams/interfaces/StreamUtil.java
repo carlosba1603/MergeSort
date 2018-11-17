@@ -27,8 +27,8 @@ public class StreamUtil {
 	public static final int STREAM_TYPE = 3;
 	
 	public static void main(String[] args) {
-		createRandomFile( "Random.data" );
-		readFile("Random.data");
+		//createRandomFile( "Random.data" );
+		//readFile("Random.data");
 	}
 
 	public static void createTestFiles() {
@@ -62,9 +62,9 @@ public class StreamUtil {
 		}
 	}
 	
-	public static MSInputStream getInputStream( int streamType ) {
+	public static MSInputStream getInputStream() {
 	
-		switch( streamType ) {
+		switch( STREAM_TYPE ) {
 			case 1:
 				return new MSInputStream1();
 			
@@ -83,9 +83,9 @@ public class StreamUtil {
 		
 	}
 	
-	public static MSOutputStream getOutputStream( int streamType ) {
+	public static MSOutputStream getOutputStream() {
 		
-		switch( streamType ) {
+		switch( STREAM_TYPE ) {
 			case 1:
 				return new MSOutputStream1();
 			
@@ -106,7 +106,7 @@ public class StreamUtil {
 	
 	public static void readFile( String path ) {
 		
-		MSInputStream is = getInputStream( STREAM_TYPE );
+		MSInputStream is = getInputStream();
 		
 		try {
 			is.open( path );
@@ -134,7 +134,7 @@ public class StreamUtil {
 	
 	public static void createFileWithIntegers( String path, int numbers[] ) throws IOException {
 		
-		MSOutputStream os = getOutputStream( STREAM_TYPE );
+		MSOutputStream os = getOutputStream();
 		
 		os.create( path );
 		
@@ -153,12 +153,12 @@ public class StreamUtil {
 	
 	public static void createRandomFile( String path ){
 		
-		MSOutputStream os = getOutputStream( STREAM_TYPE );
+		MSOutputStream os = getOutputStream();
 		
 		try {
 			os.create( path );
 			
-			for( int i = 0; i < 37; i++) {
+			for( int i = 0; i < 57; i++) {
 				
 				int randomNum = ThreadLocalRandom.current().nextInt(0, 100);//Integer.MAX_VALUE);
 				
@@ -185,7 +185,7 @@ public class StreamUtil {
 	public static int getFileSize( String path ) {
 		int file_size = 0;
 		
-		MSInputStream is = StreamUtil.getInputStream( STREAM_TYPE );
+		MSInputStream is = StreamUtil.getInputStream();
 		
 		try {
 			
