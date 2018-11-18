@@ -6,8 +6,6 @@ import java.io.IOException;
 
 public interface MSInputStream {
 	
-	public static final int B = 5;
-	
 	public void open( String path ) throws FileNotFoundException;
 	
 	public int read_next() throws IOException;

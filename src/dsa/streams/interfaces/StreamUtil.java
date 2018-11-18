@@ -29,18 +29,27 @@ import dsa.streams.output.MSOutputStream4;
 public class StreamUtil {
 	
 	public static int STREAM_TYPE;
+	public static int B;
 	
 	public static void main(String[] args) {
 		
-		if( args.length < 1 ) {
-			System.out.println("java StreamUtil.java [streams_number] [stream_type]" );
+		if( args.length < 3 ) {
+			System.out.println("java StreamUtil.java [streams_number] [number_of_io] [stream_type] " );
 			return;
 		}
 		
 		int streamsNumber = Integer.parseInt( args[0] );
-		STREAM_TYPE = Integer.parseInt( args[1] );
+		int iosNumber = Integer.parseInt( args[1] );
+		STREAM_TYPE = Integer.parseInt( args[2] );
 		
-		writeStreams( streamsNumber );
+		if( STREAM_TYPE  == 3 ) {
+			if( args.length < 4 ) {
+				System.out.println("java StreamUtil.java [streams_number] [number_of_io] 3 [buffer_size] " );
+			}
+			B = Integer.parseInt( args[3] );
+		}
+		
+		writeStreams( streamsNumber, iosNumber );
 		readStreams( streamsNumber );
 		
 	}
@@ -86,7 +95,10 @@ public class StreamUtil {
 				return new MSInputStream2();
 				
 			case 3:
-				return new MSInputStream3();
+				MSInputStream3 is = new MSInputStream3();
+				is.B = B;
+				
+				return is;
 			
 			case 4:
 				return new MSInputStream4();
@@ -107,7 +119,10 @@ public class StreamUtil {
 				return new MSOutputStream2();
 				
 			case 3:
-				return new MSOutputStream3();
+				MSOutputStream3 os = new MSOutputStream3();
+				os.B = B;
+				
+				return os;
 			
 			case 4:
 				return new MSOutputStream4();
@@ -163,8 +178,10 @@ public class StreamUtil {
 			
 			
 			try {
-				int x = is.read_next();
-				//System.out.println( x );
+				while( !is.end_of_stream() ) {
+					int x = is.read_next();
+					//System.out.println( x );
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -178,7 +195,7 @@ public class StreamUtil {
 		
 	}
 	
-	public static void writeStreams( int k ) {
+	public static void writeStreams( int k, int n ) {
 		
 		List<MSOutputStream> streams = new ArrayList<>();
 		
@@ -197,10 +214,12 @@ public class StreamUtil {
 		
 		for( MSOutputStream os : streams ) {
 		
-			int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
-		
+			
 			try {
-				os.write( randomNum );
+				for( int i = 0; i < n; i++ ) {
+					int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
+					os.write( randomNum );
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
