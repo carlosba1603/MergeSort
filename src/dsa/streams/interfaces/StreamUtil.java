@@ -10,6 +10,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import dsa.streams.input.MSInputStream1;
@@ -24,11 +28,30 @@ import dsa.streams.output.MSOutputStream4;
 
 public class StreamUtil {
 	
-	public static final int STREAM_TYPE = 3;
+	public static int STREAM_TYPE;
+	public static int B;
 	
 	public static void main(String[] args) {
-		createRandomFile( "Random.data" );
-		readFile("Random.data");
+		
+		if( args.length < 3 ) {
+			System.out.println("java StreamUtil.java [streams_number] [number_of_io] [stream_type] " );
+			return;
+		}
+		
+		int streamsNumber = Integer.parseInt( args[0] );
+		int iosNumber = Integer.parseInt( args[1] );
+		STREAM_TYPE = Integer.parseInt( args[2] );
+		
+		if( STREAM_TYPE  == 3 ) {
+			if( args.length < 4 ) {
+				System.out.println("java StreamUtil.java [streams_number] [number_of_io] 3 [buffer_size] " );
+			}
+			B = Integer.parseInt( args[3] );
+		}
+		
+		writeStreams( streamsNumber, iosNumber );
+		readStreams( streamsNumber );
+		
 	}
 
 	public static void createTestFiles() {
@@ -62,9 +85,9 @@ public class StreamUtil {
 		}
 	}
 	
-	public static MSInputStream getInputStream( int streamType ) {
+	public static MSInputStream getInputStream() {
 	
-		switch( streamType ) {
+		switch( STREAM_TYPE ) {
 			case 1:
 				return new MSInputStream1();
 			
@@ -72,7 +95,10 @@ public class StreamUtil {
 				return new MSInputStream2();
 				
 			case 3:
-				return new MSInputStream3();
+				MSInputStream3 is = new MSInputStream3();
+				is.B = B;
+				
+				return is;
 			
 			case 4:
 				return new MSInputStream4();
@@ -83,9 +109,9 @@ public class StreamUtil {
 		
 	}
 	
-	public static MSOutputStream getOutputStream( int streamType ) {
+	public static MSOutputStream getOutputStream() {
 		
-		switch( streamType ) {
+		switch( STREAM_TYPE ) {
 			case 1:
 				return new MSOutputStream1();
 			
@@ -93,7 +119,10 @@ public class StreamUtil {
 				return new MSOutputStream2();
 				
 			case 3:
-				return new MSOutputStream3();
+				MSOutputStream3 os = new MSOutputStream3();
+				os.B = B;
+				
+				return os;
 			
 			case 4:
 				return new MSOutputStream4();
@@ -104,9 +133,113 @@ public class StreamUtil {
 		
 	}
 	
+	public static void writeOneElementFile( String path ) {
+		
+		MSOutputStream os = getOutputStream();
+		
+		try {
+			
+			os.create( path );
+
+			int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
+			
+			os.write( randomNum );
+			
+			
+			os.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public static void readStreams( int k ) {
+		Set<MSInputStream> streams = new HashSet<>();
+		
+		for( int i = 0; i < k; i++ ) {
+			MSInputStream is = getInputStream();
+			try {
+				is.open("Data/S_"+i+".data");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			streams.add(is);
+		}
+		
+		for( MSInputStream is : streams ) {
+			
+			
+			try {
+				while( !is.end_of_stream() ) {
+					int x = is.read_next();
+					//System.out.println( x );
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		for( MSInputStream is : streams ) {
+			
+		}
+		
+	}
+	
+	public static void writeStreams( int k, int n ) {
+		
+		List<MSOutputStream> streams = new ArrayList<>();
+		
+		for( int i = 0; i < k; i++ ) {
+			MSOutputStream os = getOutputStream();
+			
+			try {
+				os.create("Data/S_"+i+".data");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			streams.add(os);
+		}
+		
+		for( MSOutputStream os : streams ) {
+		
+			
+			try {
+				for( int i = 0; i < n; i++ ) {
+					int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
+					os.write( randomNum );
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		for( MSOutputStream os : streams ) {
+			try {
+				os.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	public static void readFile( String path ) {
 		
-		MSInputStream is = getInputStream( STREAM_TYPE );
+		MSInputStream is = getInputStream();
 		
 		try {
 			is.open( path );
@@ -134,7 +267,7 @@ public class StreamUtil {
 	
 	public static void createFileWithIntegers( String path, int numbers[] ) throws IOException {
 		
-		MSOutputStream os = getOutputStream( STREAM_TYPE );
+		MSOutputStream os = getOutputStream();
 		
 		os.create( path );
 		
@@ -153,12 +286,12 @@ public class StreamUtil {
 	
 	public static void createRandomFile( String path ){
 		
-		MSOutputStream os = getOutputStream( STREAM_TYPE );
+		MSOutputStream os = getOutputStream();
 		
 		try {
 			os.create( path );
 			
-			for( int i = 0; i < 37; i++) {
+			for( int i = 0; i < 57; i++) {
 				
 				int randomNum = ThreadLocalRandom.current().nextInt(0, 100);//Integer.MAX_VALUE);
 				
@@ -185,7 +318,7 @@ public class StreamUtil {
 	public static int getFileSize( String path ) {
 		int file_size = 0;
 		
-		MSInputStream is = StreamUtil.getInputStream( STREAM_TYPE );
+		MSInputStream is = StreamUtil.getInputStream();
 		
 		try {
 			

@@ -17,16 +17,19 @@ public class MSInputStream3 implements MSInputStream {
 
 	public DataInputStream dis;
 	private int[] buffer;
+
+	public int B = 5;
 	
 	private int count;
 	private boolean readEnd;
 	private int numbersInBuffer;
 	
 	@Override
-	public void open(String path) throws FileNotFoundException {
+	public void open(String path ) throws FileNotFoundException {
 		
 		InputStream is = new FileInputStream( new File( path ) );
         this.dis = new DataInputStream( is );
+        this.B = B;
         this.buffer = new int[B];
         count = B;
 		

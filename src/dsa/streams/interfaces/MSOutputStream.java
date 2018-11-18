@@ -5,8 +5,6 @@ import java.io.IOException;
 
 public interface MSOutputStream {
 	
-	public static final int B = 5;
-
 	public void create( String path ) throws FileNotFoundException ;
 	
 	public void write( Integer element ) throws IOException;

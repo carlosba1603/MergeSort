@@ -12,9 +12,12 @@ import dsa.streams.interfaces.MSOutputStream;
 import dsa.streams.interfaces.StreamUtil;
 
 public class ExternalDWayMergeSort {
-
-	public static final int STREAM_TYPE = 1;
 	
+	public static final String STEAM_QUEUE_FILE = "StreamQueue.data";
+	public static int mainMemorySize;
+	public static int streamsToMerge;
+	public static String path;
+	public static int queueIndex;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -24,68 +27,113 @@ public class ExternalDWayMergeSort {
 		}
 		
 		String path = args[0];
-		int mainMemorySize = Integer.parseInt( args[1] );
-		int streamsToMerge = Integer.parseInt( args[2] );
+		mainMemorySize = Integer.parseInt( args[1] );
+		streamsToMerge = Integer.parseInt( args[2] );
+		
+		
+		
+		StreamUtil.createRandomFile(path);
+		
+		
 		
 		int fileSize = StreamUtil.getFileSize( path );
+		int streamsNumber = (int) Math.ceil( (double)fileSize / mainMemorySize );
+		boolean queueInDisk = streamsNumber >= mainMemorySize;
 		
-		int streamsNumber = (int) Math.ceil( (double)fileSize / (double)mainMemorySize );
+		splitFile( path, streamsNumber, queueInDisk  );
 		
-		
-		readAndSortStreams( "Random.data", streamsNumber, mainMemorySize  );
-		
-	}
-	
-	public static List<MSOutputStream> readAndSortStreams( String path, int streamsNumber, int mainMemorySize ) {
-		
-		List<MSOutputStream> list = new ArrayList<>();
-		
-		MSInputStream is = StreamUtil.getInputStream( STREAM_TYPE );
-		
-		try {
-			is.open(path);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		
 		for( int i = 0; i < streamsNumber; i++ ) {
-			
-			MSOutputStream os = StreamUtil.getOutputStream( STREAM_TYPE );
-			
-			int array[] = new int[mainMemorySize];
-			int count = 0;
-			
-			try {
-				while( !is.end_of_stream() ) {
-					
-					array[count++] = is.read_next();
-					
-					if( count == mainMemorySize ) {
-						
-						Arrays.sort( array );
-						
-						break;
-					}
-					
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			for( int j = 0; j < count; j++ ) {
-				System.out.print(array[j]+" ");
-			}
-			System.out.println("");
-			
-			
+			System.out.println("\n == Stream_"+i+".data == \n");
+			StreamUtil.readFile("Stream_"+i+".data");
 		}
 		
-		return list;
+		if( queueInDisk ) {
+			System.out.println("\n == Queue_.data == \n");
+			StreamUtil.readFile( STEAM_QUEUE_FILE );
+		}
+		
+		//readStreamReferences( queueInExternalMemory )
 		
 	}
 	
+	public static void readStreamReferences( boolean queueInDisk ) {
+		
+		
+		
+	}
+	
+	public static void splitFile( String path, int streamsNumber,  boolean queueInDisk ) {
+		
+		MSInputStream is = StreamUtil.getInputStream();
+		MSOutputStream stremReferencesOS = StreamUtil.getOutputStream();
+		
+		try {
+			
+			is.open(path);
+			
+			if( queueInDisk ) {
+				stremReferencesOS.create( STEAM_QUEUE_FILE );
+			}
+			
+			for( int i = 0; i < streamsNumber; i++ ) {
+
+				readStream( is, i );
+				
+				if( queueInDisk )
+					stremReferencesOS.write( i );
+				
+			}
+			
+			if( queueInDisk )
+				stremReferencesOS.close();;
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+	}
+	
+	
+	public static void readStream( MSInputStream is,  int streamNumber ) {
+		
+		int array[] = new int[ mainMemorySize ];
+		int count = 0;
+		
+		MSOutputStream os = StreamUtil.getOutputStream();
+		
+		try {
+			
+			os.create("Stream_"+streamNumber+".data");
+			
+			while( !is.end_of_stream() ) {
+				
+				array[count++] = is.read_next();
+				
+				if( count == mainMemorySize ) {
+					
+					Arrays.sort( array );
+					
+					break;
+				}
+				
+			}
+			
+			for( int i = 0; i < count; i++ ) {
+				os.write(array[i]);
+			}
+			
+			os.close();
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 
 }

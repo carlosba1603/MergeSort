@@ -25,7 +25,7 @@ public class DWayMerge {
 		
 		for( int i = 0; i < 3; i++ ) {
 			
-			MSInputStream is = StreamUtil.getInputStream( StreamUtil.STREAM_TYPE );
+			MSInputStream is = StreamUtil.getInputStream();
 			try {
 				is.open( "Random_"+i+".data" );
 			} catch (FileNotFoundException e) {
@@ -57,7 +57,7 @@ public class DWayMerge {
 	    MSPriorityQueue queue = new MSPriorityQueue( heapNodes );
 	    
 	    
-	    MSOutputStream mergedStream = StreamUtil.getOutputStream( StreamUtil.STREAM_TYPE );
+	    MSOutputStream mergedStream = StreamUtil.getOutputStream();
 		
 	    try {
 			mergedStream.create( MERGED_PATH );

@@ -16,6 +16,10 @@ public class MSOutputStream3 implements MSOutputStream {
 	private int buffer[];
 	private int count;
 	
+
+	public int B = 5;
+
+	
 	@Override
 	public void create(String path) throws FileNotFoundException {
 
