@@ -10,6 +10,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import dsa.streams.input.MSInputStream1;
@@ -24,11 +28,21 @@ import dsa.streams.output.MSOutputStream4;
 
 public class StreamUtil {
 	
-	public static final int STREAM_TYPE = 3;
+	public static int STREAM_TYPE;
 	
 	public static void main(String[] args) {
-		//createRandomFile( "Random.data" );
-		//readFile("Random.data");
+		
+		if( args.length < 1 ) {
+			System.out.println("java StreamUtil.java [streams_number] [stream_type]" );
+			return;
+		}
+		
+		int streamsNumber = Integer.parseInt( args[0] );
+		STREAM_TYPE = Integer.parseInt( args[1] );
+		
+		writeStreams( streamsNumber );
+		readStreams( streamsNumber );
+		
 	}
 
 	public static void createTestFiles() {
@@ -101,6 +115,106 @@ public class StreamUtil {
 			default:
 				return new MSOutputStream1();
 		}	
+		
+	}
+	
+	public static void writeOneElementFile( String path ) {
+		
+		MSOutputStream os = getOutputStream();
+		
+		try {
+			
+			os.create( path );
+
+			int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
+			
+			os.write( randomNum );
+			
+			
+			os.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public static void readStreams( int k ) {
+		Set<MSInputStream> streams = new HashSet<>();
+		
+		for( int i = 0; i < k; i++ ) {
+			MSInputStream is = getInputStream();
+			try {
+				is.open("Data/S_"+i+".data");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			streams.add(is);
+		}
+		
+		for( MSInputStream is : streams ) {
+			
+			
+			try {
+				int x = is.read_next();
+				//System.out.println( x );
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		for( MSInputStream is : streams ) {
+			
+		}
+		
+	}
+	
+	public static void writeStreams( int k ) {
+		
+		List<MSOutputStream> streams = new ArrayList<>();
+		
+		for( int i = 0; i < k; i++ ) {
+			MSOutputStream os = getOutputStream();
+			
+			try {
+				os.create("Data/S_"+i+".data");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			streams.add(os);
+		}
+		
+		for( MSOutputStream os : streams ) {
+		
+			int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
+		
+			try {
+				os.write( randomNum );
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		for( MSOutputStream os : streams ) {
+			try {
+				os.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	
