@@ -47,7 +47,6 @@ public class MSOutputStream3 implements MSOutputStream {
 
 	@Override
 	public void close() throws IOException {
-		// TODO Auto-generated method stub
 		
 		writeBufferInStream();
 		
@@ -67,10 +66,4 @@ public class MSOutputStream3 implements MSOutputStream {
 		
 	}
 	
-	/*private void writeBufferInStream() throws IOException {
-		
-		
-		
-	}*/
-
 }
