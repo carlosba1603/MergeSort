@@ -241,6 +241,8 @@ public class StreamUtil {
 		
 		MSInputStream is = getInputStream();
 		
+		
+		System.out.println("\n === "+path+" === \n");
 		try {
 			is.open( path );
 		} catch (FileNotFoundException e) {

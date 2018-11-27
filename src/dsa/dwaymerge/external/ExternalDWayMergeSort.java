@@ -14,15 +14,16 @@ import dsa.streams.interfaces.StreamUtil;
 
 public class ExternalDWayMergeSort {
 	
-	public static final String STREAM_QUEUE_FILE = "StreamQueue.data";
+	public static final String STREAM_QUEUE_FILE = "Queue_";
 	public static final String STREAM_PREFFIX = "Stream_";
-	public static final String STREAM_SUFFIX = ".data";
+	public static final String FILE_SUFFIX = ".data";
 	public static int mainMemorySize;
 	public static int streamsToMerge;
 	public static String path;
 	public static int queueIndex;
 	public static int writeQueuePos = 0;
 	public static int readQueuePos = 0;
+	public static int passCount = 0;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -50,57 +51,64 @@ public class ExternalDWayMergeSort {
 		
 		//2.2
 		for( int i = 0; i < streamsNumber; i++ ) {
-			System.out.println("\n == Stream_"+i+".data == \n");
 			StreamUtil.readFile("Stream_"+i+".data");
 		}
 		
-		
+		readStreamReferencesInQueue();
 	
-		//Arreglo con el nombre de cada uno de los archivos
-		if( queueInDisk ) {
-			System.out.println("\n == Queue_.data == \n");
-			StreamUtil.readFile( STREAM_QUEUE_FILE );
-			MSInputStream queue = StreamUtil.getInputStream();
-			MSOutputStream queueWrite = StreamUtil.getOutputStream();
-			
+		
+	}
+	
+	public static void readStreamReferencesInQueue( ) {
+		
+		MSInputStream queue = StreamUtil.getInputStream();
+		MSOutputStream queueWrite = StreamUtil.getOutputStream();
 
 		try {
-			
-			queue.open(STREAM_QUEUE_FILE);
-			
-		   while (!queue.end_of_stream()){
 
+			queue.open(STREAM_QUEUE_FILE+passCount+FILE_SUFFIX);
+			passCount++;
+			
+			while (!queue.end_of_stream()){
+	
 				List< MSInputStream > streams  = new ArrayList < MSInputStream >();
+							
+				int elementsInQueue = 0;
 				
-				int i = 0;
-				while (i < streamsToMerge){
+				while ( !queue.end_of_stream() && elementsInQueue < streamsToMerge ){
+	
 					MSInputStream newS = StreamUtil.getInputStream();
-					newS.open(STREAM_PREFFIX+readQueuePos+STREAM_SUFFIX);
+					newS.open(STREAM_PREFFIX+readQueuePos+FILE_SUFFIX);
 					streams.add(newS);
-					i++;
+					elementsInQueue++;
 					readQueuePos++;
 				}
-				
+							
 				//Sort
 				
-				DWayMerge.mergeStreams(streams, STREAM_PREFFIX+writeQueuePos+STREAM_SUFFIX);
-				queueWrite.create(STREAM_QUEUE_FILE, true);
+	
+				DWayMerge.mergeStreams(streams, STREAM_PREFFIX+writeQueuePos+FILE_SUFFIX);
+				
+				StreamUtil.readFile(STREAM_PREFFIX+writeQueuePos+FILE_SUFFIX);
+				
+				queueWrite.create(STREAM_QUEUE_FILE+passCount+FILE_SUFFIX, true);
 				queueWrite.write(writeQueuePos);
 				writeQueuePos++;
-			
-		   }
-		
+				
+				StreamUtil.readFile(STREAM_QUEUE_FILE+passCount+FILE_SUFFIX);
+						
+			}
+					   
+				   
+				
 		//readStreamReferences( queueInExternalMemory )
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	}
-	
-	public static void readStreamReferences( boolean queueInDisk ) {
 		
 		
+			
 		
 	}
 	
@@ -114,7 +122,7 @@ public class ExternalDWayMergeSort {
 			is.open(path);
 			
 			if( queueInDisk ) {
-				stremReferencesOS.create( STREAM_QUEUE_FILE, true );
+				stremReferencesOS.create( STREAM_QUEUE_FILE+passCount+FILE_SUFFIX, false );
 			}
 			
 			for( writeQueuePos = 0; writeQueuePos < streamsNumber; writeQueuePos++ ) {
@@ -126,8 +134,10 @@ public class ExternalDWayMergeSort {
 				
 			}
 			
-			if( queueInDisk )
-				stremReferencesOS.close();;
+			if( queueInDisk ) {
+				stremReferencesOS.close();
+				
+			}
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

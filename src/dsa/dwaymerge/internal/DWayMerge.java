@@ -76,7 +76,7 @@ public class DWayMerge {
 	    		try {
 					mergedStream.write( root.element );
 
-				    System.out.println( root.element );
+				    //System.out.println( root.element );
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
