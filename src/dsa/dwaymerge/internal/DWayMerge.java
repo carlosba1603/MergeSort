@@ -16,6 +16,7 @@ public class DWayMerge {
 	
 	public static final String MERGED_PATH = "Merged.data";
 
+	//For testing
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
@@ -38,7 +39,8 @@ public class DWayMerge {
 		
 		
 		System.out.println( "\n ===  Screen.data === \n" );
-		mergeStreams( streams );
+		
+		mergeStreams( streams, MERGED_PATH );
 		
 		
 			System.out.println( "\n === Merged.data === \n" );
@@ -48,19 +50,18 @@ public class DWayMerge {
 	}
 	
 	
-	public static void mergeStreams( List< MSInputStream > streams ) {
+	public static void mergeStreams( List< MSInputStream > streams, String outputFileName ) {
 		
 
 		List<Boolean> streamsDone = new ArrayList<>();
 		
 		HeapNode[] heapNodes = getHeapNodeFromStream( streams, streamsDone  );
 	    MSPriorityQueue queue = new MSPriorityQueue( heapNodes );
-	    
-	    
-	    MSOutputStream mergedStream = StreamUtil.getOutputStream();
 		
+	    MSOutputStream mergedStream = StreamUtil.getOutputStream();
+	    
 	    try {
-			mergedStream.create( MERGED_PATH );
+			mergedStream.create( outputFileName );
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
