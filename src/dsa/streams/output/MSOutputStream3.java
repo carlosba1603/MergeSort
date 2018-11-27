@@ -21,9 +21,9 @@ public class MSOutputStream3 implements MSOutputStream {
 
 	
 	@Override
-	public void create(String path) throws FileNotFoundException {
+	public void create(String path, boolean append) throws FileNotFoundException {
 
-		this.dos = new DataOutputStream( new FileOutputStream( path ) );
+		this.dos = new DataOutputStream( new FileOutputStream( path, append ) );
 		this.buffer = new int[B];
 		this.count = 0;
 		

@@ -12,9 +12,9 @@ public class MSOutputStream1 implements MSOutputStream{
 	private DataOutputStream dos;
 	
 	@Override
-	public void create(String path) throws FileNotFoundException {
+	public void create(String path, boolean append) throws FileNotFoundException {
 
-		this.dos = new DataOutputStream( new FileOutputStream( path ) );
+		this.dos = new DataOutputStream( new FileOutputStream( path, append ) );
 	}
 
 	@Override

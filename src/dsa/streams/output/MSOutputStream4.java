@@ -10,7 +10,7 @@ public class MSOutputStream4 implements MSOutputStream {
 	private DataOutputStream dos;
 	
 	@Override
-	public void create(String path) {
+	public void create(String path, boolean append) {
 		// TODO Auto-generated method stub
 		
 	}

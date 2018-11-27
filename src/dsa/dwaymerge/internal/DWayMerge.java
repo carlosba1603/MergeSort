@@ -61,7 +61,7 @@ public class DWayMerge {
 	    MSOutputStream mergedStream = StreamUtil.getOutputStream();
 	    
 	    try {
-			mergedStream.create( outputFileName );
+			mergedStream.create( outputFileName, false );
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

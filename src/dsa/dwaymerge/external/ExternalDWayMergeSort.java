@@ -14,7 +14,7 @@ import dsa.streams.interfaces.StreamUtil;
 
 public class ExternalDWayMergeSort {
 	
-	public static final String STEAM_QUEUE_FILE = "StreamQueue.data";
+	public static final String STREAM_QUEUE_FILE = "StreamQueue.data";
 	public static final String STREAM_PREFFIX = "Stream_";
 	public static final String STREAM_SUFFIX = ".data";
 	public static int mainMemorySize;
@@ -59,14 +59,14 @@ public class ExternalDWayMergeSort {
 		//Arreglo con el nombre de cada uno de los archivos
 		if( queueInDisk ) {
 			System.out.println("\n == Queue_.data == \n");
-			StreamUtil.readFile( STEAM_QUEUE_FILE );
+			StreamUtil.readFile( STREAM_QUEUE_FILE );
 			MSInputStream queue = StreamUtil.getInputStream();
 			MSOutputStream queueWrite = StreamUtil.getOutputStream();
 			
 
 		try {
 			
-			queue.open(STEAM_QUEUE_FILE);
+			queue.open(STREAM_QUEUE_FILE);
 			
 		   while (!queue.end_of_stream()){
 
@@ -84,7 +84,7 @@ public class ExternalDWayMergeSort {
 				//Sort
 				
 				DWayMerge.mergeStreams(streams, STREAM_PREFFIX+writeQueuePos+STREAM_SUFFIX);
-				queueWrite.create(STEAM_QUEUE_FILE);
+				queueWrite.create(STREAM_QUEUE_FILE, true);
 				queueWrite.write(writeQueuePos);
 				writeQueuePos++;
 			
@@ -114,7 +114,7 @@ public class ExternalDWayMergeSort {
 			is.open(path);
 			
 			if( queueInDisk ) {
-				stremReferencesOS.create( STEAM_QUEUE_FILE );
+				stremReferencesOS.create( STREAM_QUEUE_FILE, true );
 			}
 			
 			for( writeQueuePos = 0; writeQueuePos < streamsNumber; writeQueuePos++ ) {
@@ -149,7 +149,7 @@ public class ExternalDWayMergeSort {
 		
 		try {
 			
-			os.create("Stream_"+streamNumber+".data");
+			os.create("Stream_"+streamNumber+".data", false);
 			
 			while( !is.end_of_stream() ) {
 				

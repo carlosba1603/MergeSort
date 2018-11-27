@@ -139,7 +139,7 @@ public class StreamUtil {
 		
 		try {
 			
-			os.create( path );
+			os.create( path, false );
 
 			int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
 			
@@ -203,7 +203,7 @@ public class StreamUtil {
 			MSOutputStream os = getOutputStream();
 			
 			try {
-				os.create("Data/S_"+i+".data");
+				os.create("Data/S_"+i+".data", false);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -269,7 +269,7 @@ public class StreamUtil {
 		
 		MSOutputStream os = getOutputStream();
 		
-		os.create( path );
+		os.create( path, false );
 		
 		
 		for( int i = 0; i < numbers.length; i++) {
@@ -289,7 +289,7 @@ public class StreamUtil {
 		MSOutputStream os = getOutputStream();
 		
 		try {
-			os.create( path );
+			os.create( path, false );
 			
 			for( int i = 0; i < 57; i++) {
 				
