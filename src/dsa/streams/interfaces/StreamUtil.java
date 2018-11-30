@@ -166,7 +166,7 @@ public class StreamUtil {
 			MSInputStream is = getInputStream();
 			try {
 				is.open("Data/S_"+i+".data");
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -204,7 +204,7 @@ public class StreamUtil {
 			
 			try {
 				os.create("Data/S_"+i+".data", false);
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -245,7 +245,7 @@ public class StreamUtil {
 		System.out.println("\n === "+path+" === \n");
 		try {
 			is.open( path );
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

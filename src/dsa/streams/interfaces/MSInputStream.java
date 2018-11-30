@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface MSInputStream {
 	
-	public void open( String path ) throws FileNotFoundException;
+	public void open( String path ) throws IOException;
 	
 	public int read_next() throws IOException;
 	

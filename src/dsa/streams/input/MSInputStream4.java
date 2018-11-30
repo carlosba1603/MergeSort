@@ -9,7 +9,9 @@ import java.nio.IntBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
-public class MSInputStream4  {
+import dsa.streams.interfaces.MSInputStream;
+
+public class MSInputStream4 implements MSInputStream  {
 	
 	public long B;
 	public MappedByteBuffer MappedBuffer;
@@ -21,12 +23,12 @@ public class MSInputStream4  {
 		this.B=B;
 	}
 
-	public void open(String path) throws Exception {
+	public void open(String path) throws IOException {
 		
 			RandomAccessFile is = new RandomAccessFile(path, "r"); //solo lectura
 			inChannel = is.getChannel();
 			
-			MappedBuffer = inChannel.map(FileChannel.MapMode.READ_ONLY, position, B); //Se mapea la región al canal creado
+			MappedBuffer = inChannel.map(FileChannel.MapMode.READ_ONLY, position, B); //Se mapea la regiï¿½n al canal creado
 			
 			lenght=(int) new File(path).length();
 			System.out.println("La Longitud inicial del archivo es: "+lenght);

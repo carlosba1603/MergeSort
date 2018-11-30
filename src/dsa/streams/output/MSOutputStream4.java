@@ -46,14 +46,14 @@ public class MSOutputStream4 implements MSOutputStream {
 	}
 		
 	@Override
-	public void create(String path) throws IOException {
+	public void create( String path, boolean append ) throws IOException {
 		// TODO Auto-generated method stub
 		
 		RandomAccessFile is = new RandomAccessFile(path, "rw"); 
 		inChannel = is.getChannel();
 		
 				
-		MappedBuffer = inChannel.map(FileChannel.MapMode.READ_WRITE, position, lenght); //Se mapea la región al canal creado
+		MappedBuffer = inChannel.map(FileChannel.MapMode.READ_WRITE, position, lenght); //Se mapea la regiï¿½n al canal creado
 		
 		lenght=(int) new File(path).length();
 		
@@ -121,27 +121,23 @@ public class MSOutputStream4 implements MSOutputStream {
 	public static void main(String args[]) throws Exception {
 		
 		StreamUtil test = new StreamUtil(); // Se crea un objeto de la calse StreamUtil
-		//test.createRandomFile("C:\\Users\\carlo\\OneDrive\\Desktop\\datos3.txt"); // Se crea el archivo usando la clase StreamUitl
 		
 		System.out.println("**********************************");
 		
 		MSInputStream4 msI = new MSInputStream4(); // se crea un objeto de la clase Input para probar la lectura
-		//msI.open("C:\\Users\\carlo\\OneDrive\\Desktop\\datos3.txt"); //Se abre el archivo y se establece el canal en memoria
-		//msI.setB(100); //Se debe establecer el valor de B para probar la lectura, debe ser menor o igual al tamaño del archivo
-		
 		
 		MSOutputStream4 ms = new MSOutputStream4(); //Se crea un objeto de la clase output
 		 
-		ms.setB(500000); // Se tiene que llamar este método para indicar el tamaño B a pasar a memoria NO PUEDE SER MAYOR QUE EL TAMAÑO DEL ARCHIVO
+		ms.setB(500000); // Se tiene que llamar este mï¿½todo para indicar el tamaï¿½o B a pasar a memoria NO PUEDE SER MAYOR QUE EL TAMAï¿½O DEL ARCHIVO
 		ms.setNumElements(200000000);
-		ms.setLength(); // Se establece el tamaño del archivo
-		ms.create("C:\\Users\\cmarin\\Desktop\\datos2.txt"); //Creamos el archivo para escribir los números aleatorios
+		ms.setLength(); // Se establece el tamaï¿½o del archivo
+		ms.create("C:\\Users\\cmarin\\Desktop\\datos2.txt", false); //Creamos el archivo para escribir los nï¿½meros aleatorios
 		
 		//Dentro del while se pueden probar las operaciones de lectura y escritura
 		while(ms.end_of_stream()==false) { //El objeto de lectura se llama msI (de la clase input) y el de escritura ms (de la clase output)
 			//System.out.println(msI.read_next()); // Lee los enteros y los imprime
-			Integer randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE ); // genera los números a escribir
-			//System.out.println("El numero aleatorio es: "+randomNum.toString());//imprime los números
+			Integer randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE ); // genera los nï¿½meros a escribir
+			//System.out.println("El numero aleatorio es: "+randomNum.toString());//imprime los nï¿½meros
 			ms.write(randomNum);//Escribe sobre el archivo
 			
 		}

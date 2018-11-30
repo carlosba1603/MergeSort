@@ -29,7 +29,7 @@ public class DWayMerge {
 			MSInputStream is = StreamUtil.getInputStream();
 			try {
 				is.open( "Random_"+i+".data" );
-			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -62,7 +62,7 @@ public class DWayMerge {
 	    
 	    try {
 			mergedStream.create( outputFileName, false );
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
