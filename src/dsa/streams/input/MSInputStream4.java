@@ -87,15 +87,5 @@ public class MSInputStream4 implements MSInputStream  {
 		return false;
 	}
 	
-	
-/*	public static void main(String args[]) throws Exception {
-		
-		MSInputStream4 test = new MSInputStream4();
-		test.open("C:\Users\gabim\Documents\Master\ULB\Database Systems Architecture\Group_Project\data.csv");
-		while(test.end_of_stream()==false) {
-			System.out.println(test.read_next());
-		}
-		
-	}*/
 
 }
