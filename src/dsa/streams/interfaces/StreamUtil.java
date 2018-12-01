@@ -29,28 +29,36 @@ import dsa.streams.output.MSOutputStream4;
 public class StreamUtil {
 	
 	public static int STREAM_TYPE;
+	public static String ioType;
 	public static int B;
+	public static final String FILE_PREFIX = "Data/S_";
+	public static final String FILE_SUFFIX = ".data";
 	
 	public static void main(String[] args) {
 		
-		if( args.length < 3 ) {
-			System.out.println("java StreamUtil.java [streams_number] [number_of_io] [stream_type] " );
+		if( args.length < 4 ) {
+			System.out.println("java StreamUtil.java [streams_number] [number_of_io] [stream_type] [r/w] " );
 			return;
 		}
 		
 		int streamsNumber = Integer.parseInt( args[0] );
-		int iosNumber = Integer.parseInt( args[1] );
+		long iosNumber = Long.parseLong( args[1] );
 		STREAM_TYPE = Integer.parseInt( args[2] );
+		ioType = args[3];
 		
-		if( STREAM_TYPE  == 3 ) {
-			if( args.length < 4 ) {
-				System.out.println("java StreamUtil.java [streams_number] [number_of_io] 3 [buffer_size] " );
+		if( STREAM_TYPE  == 3 || STREAM_TYPE  == 4 ) {
+			if( args.length < 5 ) {
+				System.out.println("java StreamUtil.java [streams_number] [number_of_io] [stream_type] [r/w] [buffer_size] " );
 			}
-			B = Integer.parseInt( args[3] );
+			B = Integer.parseInt( args[4] );
 		}
 		
-		writeStreams( streamsNumber, iosNumber );
-		readStreams( streamsNumber );
+		if( ioType.equals("w") )
+			writeStreams( streamsNumber, iosNumber );
+		else
+			readStreams( streamsNumber );
+		
+		System.out.println("Finished");
 		
 	}
 
@@ -95,13 +103,16 @@ public class StreamUtil {
 				return new MSInputStream2();
 				
 			case 3:
-				MSInputStream3 is = new MSInputStream3();
-				is.B = B;
+				MSInputStream3 is3 = new MSInputStream3();
+				is3.B = B;
 				
-				return is;
+				return is3;
 			
 			case 4:
-				return new MSInputStream4();
+				MSInputStream4 is4 = new MSInputStream4();
+				is4.B = B;
+				return is4;
+				
 				
 			default:
 				return new MSInputStream1();
@@ -119,13 +130,16 @@ public class StreamUtil {
 				return new MSOutputStream2();
 				
 			case 3:
-				MSOutputStream3 os = new MSOutputStream3();
-				os.B = B;
+				MSOutputStream3 os3 = new MSOutputStream3();
+				os3.B = B;
 				
-				return os;
+				return os3;
 			
 			case 4:
-				return new MSOutputStream4();
+				MSOutputStream4 os4 = new MSOutputStream4();
+				os4.B = B;
+				return os4;
+				
 				
 			default:
 				return new MSOutputStream1();
@@ -165,7 +179,7 @@ public class StreamUtil {
 		for( int i = 0; i < k; i++ ) {
 			MSInputStream is = getInputStream();
 			try {
-				is.open("Data/S_"+i+".data");
+				is.open(FILE_PREFIX+i+FILE_SUFFIX);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -189,13 +203,10 @@ public class StreamUtil {
 			
 		}
 		
-		for( MSInputStream is : streams ) {
-			
-		}
 		
 	}
 	
-	public static void writeStreams( int k, int n ) {
+	public static void writeStreams( int k, long n ) {
 		
 		List<MSOutputStream> streams = new ArrayList<>();
 		

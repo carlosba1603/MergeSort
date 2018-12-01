@@ -16,9 +16,40 @@ import dsa.streams.interfaces.MSInputStream;
 public class MSInputStream3 implements MSInputStream {
 
 	public DataInputStream dis;
-	private int[] buffer;
-
 	public int B = 5;
+	
+	public void open(String path) throws FileNotFoundException {
+
+		InputStream is = new FileInputStream( new File( path ) );
+        BufferedInputStream bis = new BufferedInputStream( is, B );
+        this.dis = new DataInputStream( bis );
+        
+	}
+	
+	@Override
+	public int read_next() throws IOException {
+		
+		return dis.readInt();
+		
+	}
+
+	@Override
+	public boolean end_of_stream() throws IOException {
+		
+		int bytesAvailable = dis.available();
+		
+		if( bytesAvailable > 0 ) {
+			return false;
+		}
+		
+		dis.close();
+		
+		return true;
+	}
+	
+	/*private int[] buffer;
+
+	
 	
 	private int count;
 	private boolean readEnd;
@@ -74,6 +105,6 @@ public class MSInputStream3 implements MSInputStream {
 	@Override
 	public boolean end_of_stream() throws IOException {
 		return readEnd && count >= numbersInBuffer;
-	}
+	}*/
 
 }
