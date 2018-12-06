@@ -56,30 +56,33 @@ public class StreamUtil {
 		if( ioType.equals("w") )
 			writeStreams( streamsNumber, iosNumber );
 		else
-			readStreams( streamsNumber );
+			readStreams( streamsNumber, iosNumber );
 		
 		System.out.println("Finished");
 		
 	}
 
-	public static void createTestFiles() {
+	public static void createTestFiles( int n ) {
 			try {		
 			
 
-			int numbers[][] = { { 1,56,23,45,7,38,41,46,40,42,52,67,89,90,22,34,12,67,56,93,18,29,44,46,52,66,71,82,87,89,4,2,6,5,1,9,3},
+			/*int numbers[][] = { { 1,56,23,45,7,38,41,46,40,42,52,67,89,90,22,34,12,67,56,93,18,29,44,46,52,66,71,82,87,89,4,2,6,5,1,9,3},
 								{18,29,44,46,52,66,71,82,87,89,4,2,6,5,1,9,3 },
-								{ 1, 5, 8, 100 } };
+								{ 1, 5, 8, 100 } };*/
+			
+			int numbers[][] = { { 1,56,23},
+					{18,29,44},
+					{ 1, 5, 8, 100 } };
+
 			
 			
-			for( int i = 0; i < 3; i++ ) {
+			for( int i = 0; i < n; i++ ) {
 				createFileWithIntegers( "Random_"+i+".data", numbers[i] );
 			}
 			
 		
 			
-			for( int i = 0; i < 3; i++ ) {
-				
-				System.out.println( "\n === Random_"+i+".data === \n" );
+			for( int i = 0; i < n; i++ ) {
 				readFile( "Random_"+i+".data" );
 			}
 			
@@ -173,7 +176,7 @@ public class StreamUtil {
 		
 	}
 	
-	public static void readStreams( int k ) {
+	public static void readStreams( int k, long n ) {
 		Set<MSInputStream> streams = new HashSet<>();
 		
 		for( int i = 0; i < k; i++ ) {
@@ -188,19 +191,19 @@ public class StreamUtil {
 			streams.add(is);
 		}
 		
-		for( MSInputStream is : streams ) {
-			
-			
-			try {
-				while( !is.end_of_stream() ) {
-					int x = is.read_next();
-					//System.out.println( x );
+		
+		for( int i = 0; i < n; i++ ) {	
+		
+			for( MSInputStream is : streams ) {
+				try {
+						int x = is.read_next();
+						//System.out.println( x );
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
 			}
-			
 		}
 		
 		
@@ -223,18 +226,22 @@ public class StreamUtil {
 			streams.add(os);
 		}
 		
-		for( MSOutputStream os : streams ) {
-		
+		for( int i = 0; i < n; i++ ) {
 			
-			try {
-				for( int i = 0; i < n; i++ ) {
-					int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
-					os.write( randomNum );
+			for( MSOutputStream os : streams ) {
+			
+				
+				try {
+					
+						int randomNum = ThreadLocalRandom.current().nextInt( Integer.MIN_VALUE, Integer.MAX_VALUE );//Integer.MAX_VALUE);
+						os.write( randomNum );
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+		
 		}
 		
 		for( MSOutputStream os : streams ) {

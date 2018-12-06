@@ -20,11 +20,13 @@ public class DWayMerge {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		StreamUtil.createTestFiles();
+		int testFiles = 3;
+		
+		StreamUtil.createTestFiles( testFiles );
 		
 		List< MSInputStream > streams = new ArrayList<>();
 		
-		for( int i = 0; i < 3; i++ ) {
+		for( int i = 0; i < testFiles; i++ ) {
 			
 			MSInputStream is = StreamUtil.getInputStream();
 			try {
@@ -67,16 +69,16 @@ public class DWayMerge {
 			e.printStackTrace();
 		}
 	    
-	    for ( int i = 0; i < streams.size(); i++ ) {
+	    while ( !getStreamsDone( streamsDone ) ) {
 	    
 	    	HeapNode root = queue.getRoot(); 
 	    	
-	    	if( !streamsDone.get(i) ) {
+	    	if( !streamsDone.get( root.idexOfStream  ) ) {
 	    		
 	    		try {
 					mergedStream.write( root.element );
 
-				    //System.out.println( root.element );
+				    System.out.println( root.element );
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -91,7 +93,7 @@ public class DWayMerge {
 					    
 					} else {
 						root.element = Integer.MAX_VALUE ;
-						streamsDone.set(i, new Boolean(true));
+						streamsDone.set( root.idexOfStream, new Boolean(true));
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -101,9 +103,6 @@ public class DWayMerge {
 	    	
 	    	queue.heapify(0);
 	    	
-	    	if( !getStreamsDone( streamsDone ) && i+1 == streams.size() ) {
-	    		i=-1;
-	    	}
 	    } 
 	}
 	
