@@ -14,7 +14,7 @@ import dsa.streams.output.MSOutputStream2;
 public class DWayMerge {
 	
 	
-	public static final String MERGED_PATH = "Merged.data";
+	public static final String MERGED_PATH = "Data/Merged.data";
 
 	//For testing
 	public static void main(String[] args) {
@@ -45,8 +45,7 @@ public class DWayMerge {
 		mergeStreams( streams, MERGED_PATH );
 		
 		
-			System.out.println( "\n === Merged.data === \n" );
-			StreamUtil.readFile("Merged.data");
+		StreamUtil.readFile("Merged.data");
 		
 
 	}
@@ -78,7 +77,7 @@ public class DWayMerge {
 	    		try {
 					mergedStream.write( root.element );
 
-				    System.out.println( root.element );
+				    //System.out.println( root.element );
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -104,6 +103,13 @@ public class DWayMerge {
 	    	queue.heapify(0);
 	    	
 	    } 
+	    
+	    try {
+			mergedStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static HeapNode[] getHeapNodeFromStream( List< MSInputStream > streams, List<Boolean> streamsDone ) {

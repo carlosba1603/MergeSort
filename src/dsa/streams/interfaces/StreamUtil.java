@@ -28,9 +28,11 @@ import dsa.streams.output.MSOutputStream4;
 
 public class StreamUtil {
 	
+	public static int WRITE_STREAM_TYPE = 3;
+	public static int READ_STREAM_TYPE = 4;
 	public static int STREAM_TYPE;
 	public static String ioType;
-	public static int B;
+	public static int B = 8000;
 	public static final String FILE_PREFIX = "Data/S_";
 	public static final String FILE_SUFFIX = ".data";
 	
@@ -40,6 +42,10 @@ public class StreamUtil {
 			System.out.println("java StreamUtil.java [streams_number] [number_of_io] [stream_type] [r/w] " );
 			return;
 		}
+		
+		WRITE_STREAM_TYPE = 3;
+		READ_STREAM_TYPE = 4;
+		
 		
 		int streamsNumber = Integer.parseInt( args[0] );
 		long iosNumber = Long.parseLong( args[1] );
@@ -53,10 +59,14 @@ public class StreamUtil {
 			B = Integer.parseInt( args[4] );
 		}
 		
-		if( ioType.equals("w") )
+		if( ioType.equals("w") ) {
 			writeStreams( streamsNumber, iosNumber );
-		else
+			WRITE_STREAM_TYPE = STREAM_TYPE;
+		} else {
 			readStreams( streamsNumber, iosNumber );
+			READ_STREAM_TYPE = STREAM_TYPE;
+		}
+			
 		
 		System.out.println("Finished");
 		
@@ -98,7 +108,7 @@ public class StreamUtil {
 	
 	public static MSInputStream getInputStream() {
 	
-		switch( STREAM_TYPE ) {
+		switch( READ_STREAM_TYPE ) {
 			case 1:
 				return new MSInputStream1();
 			
@@ -125,7 +135,7 @@ public class StreamUtil {
 	
 	public static MSOutputStream getOutputStream() {
 		
-		switch( STREAM_TYPE ) {
+		switch( WRITE_STREAM_TYPE ) {
 			case 1:
 				return new MSOutputStream1();
 			
@@ -304,16 +314,16 @@ public class StreamUtil {
 	}
 	
 	
-	public static void createRandomFile( String path ){
+	public static void createRandomFile( String path, long n ){
 		
-		MSOutputStream os = getOutputStream();
+		MSOutputStream os = StreamUtil.getOutputStream();
 		
 		try {
 			os.create( path, false );
 			
-			for( int i = 0; i < 57; i++) {
+			for( int i = 0; i < n; i++) {
 				
-				int randomNum = ThreadLocalRandom.current().nextInt(0, 100);//Integer.MAX_VALUE);
+				int randomNum = ThreadLocalRandom.current().nextInt(Integer.MIN_VALUE, Integer.MAX_VALUE);
 				
 				//System.out.println( randomNum );
 				
@@ -338,7 +348,8 @@ public class StreamUtil {
 	public static int getFileSize( String path ) {
 		int file_size = 0;
 		
-		MSInputStream is = StreamUtil.getInputStream();
+		MSInputStream4 is = new MSInputStream4();
+		is.B = 8000;
 		
 		try {
 			
