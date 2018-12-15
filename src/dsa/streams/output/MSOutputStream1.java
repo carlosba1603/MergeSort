@@ -13,21 +13,17 @@ public class MSOutputStream1 implements MSOutputStream{
 	
 	@Override
 	public void create(String path, boolean append) throws FileNotFoundException {
-
 		this.dos = new DataOutputStream( new FileOutputStream( path, append ) );
 	}
 
 	@Override
 	public void write( Integer element) throws IOException {
-
 		dos.writeInt( element );
 	}
 
 	@Override
 	public void close() throws IOException {
-
 		this.dos.close();
-		
 	}
 
 }

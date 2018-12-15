@@ -1,5 +1,6 @@
 package dsa.dwaymerge.external;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ExternalDWayMergeSort {
 		mainMemorySize = Integer.parseInt( args[1] ); //M
 		dStreamsToMerge = Integer.parseInt( args[2] ); //d
 			
-		StreamUtil.createRandomFile(path, 1_000);
+		//StreamUtil.createRandomFile(path, 1_000);
 		
 		//StreamUtil.readFile(path);
 		
@@ -71,12 +72,13 @@ public class ExternalDWayMergeSort {
 			streamSorted = readStreamReferencesInQueue( queueInMemory, queueSize );
 		}
 		
-		StreamUtil.readFile(STREAM_PREFFIX+streamSorted+FILE_SUFFIX);
+		
+		//StreamUtil.readFile(STREAM_PREFFIX+streamSorted+FILE_SUFFIX);
 		
 	}
 	
 	public static int readStreamReferencesInQueue( List<MSInputStream> queue, int queueSize ) {
-		
+		int count = 1;
 	
 			int currentQueueIndex = 0;
 			int newElementsInQueue = 0;
@@ -97,6 +99,7 @@ public class ExternalDWayMergeSort {
 				}
 	
 				DWayMerge.mergeStreams(streams, STREAM_PREFFIX+writeQueuePos+FILE_SUFFIX);
+				
 				//StreamUtil.readFile(STREAM_PREFFIX+writeQueuePos+FILE_SUFFIX);
 				
 				MSInputStream newS = StreamUtil.getInputStream();
@@ -113,7 +116,9 @@ public class ExternalDWayMergeSort {
 					
 				if( currentQueueIndex == queueSize ) {
 
+					count++;
 					if( newElementsInQueue == 1 ) {
+						System.out.println( count );
 						return writeQueuePos-1;
 					}
 					
@@ -128,10 +133,9 @@ public class ExternalDWayMergeSort {
 	}
 	
 	public static int readStreamReferencesInQueue( int queueSize ) {
-		
+		int count = 1;
 		MSInputStream queue = new MSInputStream1();
 		MSOutputStream queueWrite = new MSOutputStream1();
-		
 
 		try {
 
@@ -170,8 +174,9 @@ public class ExternalDWayMergeSort {
 				
 					
 				if( currentQueueIndex == queueSize ) {
-
+					count++;
 					if( newElementsInQueue == 1 ) {
+						System.out.println( count );
 						return writeQueuePos-1;
 					}
 					

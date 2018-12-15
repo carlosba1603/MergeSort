@@ -68,6 +68,7 @@ public class MSOutputStream4 implements MSOutputStream {
 		
 			mappedBuffer.clear();
 			inChannel.close();
+			is.close();
 		
 	}
 

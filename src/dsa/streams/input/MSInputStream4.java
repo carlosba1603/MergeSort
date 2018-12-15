@@ -15,14 +15,16 @@ public class MSInputStream4 implements MSInputStream  {
 	
 	public int B;
 	public MappedByteBuffer mappedBuffer;
+	public RandomAccessFile is;
 	public int position = 0;
 	public long lenght = 0;
 	
 	public FileChannel inChannel;
 	
+	@Override
 	public void open(String path) throws IOException {
 		
-		RandomAccessFile is = new RandomAccessFile(path, "r"); //solo lectura
+		is = new RandomAccessFile(path, "r"); //solo lectura
 		
 		lenght = is.length();
 		inChannel = is.getChannel();
@@ -31,6 +33,7 @@ public class MSInputStream4 implements MSInputStream  {
 		
 	}
 	
+	@Override
 	public int read_next() throws IOException {
 		
 		int intToReturn = 0;
@@ -52,10 +55,15 @@ public class MSInputStream4 implements MSInputStream  {
 		return intToReturn;
 	}
 
-
-	public boolean end_of_stream() {
+	@Override
+	public boolean end_of_stream() throws IOException {
 
 		if (position == lenght) {
+			
+				mappedBuffer.clear();
+				inChannel.close();
+				is.close();
+			
 			return true;
 		}
 		

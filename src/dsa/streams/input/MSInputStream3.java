@@ -18,12 +18,11 @@ public class MSInputStream3 implements MSInputStream {
 	public DataInputStream dis;
 	public int B = 5;
 	
+	@Override
 	public void open(String path) throws FileNotFoundException {
-
 		InputStream is = new FileInputStream( new File( path ) );
         BufferedInputStream bis = new BufferedInputStream( is, B );
         this.dis = new DataInputStream( bis );
-        
 	}
 	
 	@Override

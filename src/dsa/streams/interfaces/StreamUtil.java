@@ -66,6 +66,10 @@ public class StreamUtil {
 			readStreams( streamsNumber, iosNumber );
 			READ_STREAM_TYPE = STREAM_TYPE;
 		}
+		
+		//StreamUtil.createRandomFile("Random_250M", 62_500_000);
+		//StreamUtil.createRandomFile("Random_2G", 500_000_000);
+		//StreamUtil.createRandomFile("Random_3G", 750_000_000);
 			
 		
 		System.out.println("Finished");
@@ -207,7 +211,7 @@ public class StreamUtil {
 			for( MSInputStream is : streams ) {
 				try {
 						int x = is.read_next();
-						//System.out.println( x );
+						System.out.println( x );
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
